@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+    
+    environment {
+        IMAGE_NAME = "alpine"
+        IMAGE_TAG = "latest"
+    }
+    
+    stages {
+        stage('Code Checkout ') {
+            steps {
+                git url: 'https://github.com/SrinivasReddyBorampet/NodeApp.git', branch: 'develop'
+            }
+        }
+        stage('Build Node Application') {
+            steps {
+                echo 'Building...'
+                //sh 'npm install && npm run server'
+                sh 'npm -v'
+            }
+        }
+        stage('Authenticate with Snyk') {
+            steps {
+                withCredentials([string(credentialsId: 'snyk-api-token2', variable: 'SNYK_TOKEN')]) {
+                    sh 'snyk auth $SNYK_TOKEN'
+                }
+            }
+        }
+        stage('Scan Alpine Image') {
+            steps {
+                script {
+                    // Optional: Inspect image to verify it's available
+                    sh 'docker image inspect $IMAGE_NAME'
+
+                    // Run Snyk scan without Dockerfile
+                    sh 'snyk container test $IMAGE_NAME'
+                }
+            }
+        }
+        stage('Sonar') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('SonarQube-GCP') {
+                        sh '''
+                            /opt/sonar-scanner/bin/sonar-scanner \
+                            -Dsonar.projectKey=DigitalRig \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://34.41.43.117:9000 \
+                            -Dsonar.login=$SONAR_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Docker Build and Push'){    
+            steps {
+                echo 'Docker Build and push...'
+                //sh 'docker -v'
+            }
+        }
+        stage('Scan Alpine with Trivy') {
+            steps {
+                script {
+                    sh "trivy image --exit-code 1 --severity LOW,MEDIUM,HIGH,CRITICAL --no-progress ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+    }
+        post {
+        failure {
+            echo "❌ Vulnerabilities found in the Alpine image."
+        }
+        success {
+            echo "✅ Alpine image is clean or has no vulnerabilities at selected levels."
+        }
+        always {
+            echo 'Snyk scan completed.'
+        }
+    }
+
+}
