@@ -15,7 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "react-scripts test --watchAll=false --ci --coverage --reporters=default --reporters=jest-junit",
+    "test:ci": "react-scripts test --watchAll=false --ci --coverage --reporters=default --reporters=jest-junit --reporters=./sonar-test-reporter.js",
     "eject": "react-scripts eject"
   },
   "jest-junit": {
