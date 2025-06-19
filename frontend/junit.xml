@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="11" failures="0" errors="0" time="17.036">
+  <testsuite name="Header Component" errors="0" failures="0" skipped="0" timestamp="2025-06-19T18:51:38" time="7.498" tests="3">
+    <testcase classname="Header Component renders without crashing" name="Header Component renders without crashing" time="0.074">
+    </testcase>
+    <testcase classname="Header Component has the correct class name" name="Header Component has the correct class name" time="0.015">
+    </testcase>
+    <testcase classname="Header Component contains logo element" name="Header Component contains logo element" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="Footer Component" errors="0" failures="0" skipped="0" timestamp="2025-06-19T18:51:38" time="7.449" tests="3">
+    <testcase classname="Footer Component renders without crashing" name="Footer Component renders without crashing" time="0.073">
+    </testcase>
+    <testcase classname="Footer Component has the correct class name" name="Footer Component has the correct class name" time="0.015">
+    </testcase>
+    <testcase classname="Footer Component displays the current year" name="Footer Component displays the current year" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="App Component" errors="0" failures="0" skipped="0" timestamp="2025-06-19T18:51:38" time="7.506" tests="2">
+    <testcase classname="App Component renders without crashing" name="App Component renders without crashing" time="0.072">
+    </testcase>
+    <testcase classname="App Component renders with correct structure" name="App Component renders with correct structure" time="0.014">
+    </testcase>
+  </testsuite>
+  <testsuite name="Main Component" errors="0" failures="0" skipped="0" timestamp="2025-06-19T18:51:38" time="7.609" tests="3">
+    <testcase classname="Main Component renders without crashing" name="Main Component renders without crashing" time="0.08">
+    </testcase>
+    <testcase classname="Main Component has the correct class name" name="Main Component has the correct class name" time="0.009">
+    </testcase>
+    <testcase classname="Main Component contains heading element" name="Main Component contains heading element" time="0.07">
+    </testcase>
+  </testsuite>
+</testsuites>
