@@ -1,47 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
-    <testCase name="Header Component renders without crashing" duration="48">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
-    <testCase name="Header Component has the correct class name" duration="7">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
-    <testCase name="Header Component contains logo element" duration="13">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component renders without crashing" duration="59">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component has the correct class name" duration="11">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component displays the current year" duration="8">
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/index.test.js">
+    <testCase name="Index renders without crashing" duration="24">
+      <failure message="TypeError: Cannot read properties of undefined (reading &apos;render&apos;)
+    at Object.&lt;anonymous&gt; (C:\Users\PR20554201\Desktop\NodeApp\frontend\src\index.js:7:6)
+    at Runtime._execModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1646:24)
+    at Runtime._loadModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1185:12)
+    at Runtime.requireModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1009:12)
+    at Runtime.require [as requireModuleOrMock] (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1210:21)
+    at Object.&lt;anonymous&gt; (C:\Users\PR20554201\Desktop\NodeApp\frontend\src\index.test.js:29:5)
+    at Promise.then.completed (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:66:9)
+    at _runTestsForDescribeBlock (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:60:9)
+    at run (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:25:3)
+    at runAndTransformResultsToJestFormat (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:170:21)
+    at jestAdapter (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:82:19)
+    at runTestInternal (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\runTest.js:389:16)
+    at runTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\runTest.js:475:34)
+    at Object.worker (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\testWorker.js:133:12)">TypeError: Cannot read properties of undefined (reading &apos;render&apos;)
+    at Object.&lt;anonymous&gt; (C:\Users\PR20554201\Desktop\NodeApp\frontend\src\index.js:7:6)
+    at Runtime._execModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1646:24)
+    at Runtime._loadModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1185:12)
+    at Runtime.requireModule (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1009:12)
+    at Runtime.require [as requireModuleOrMock] (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runtime\build\index.js:1210:21)
+    at Object.&lt;anonymous&gt; (C:\Users\PR20554201\Desktop\NodeApp\frontend\src\index.test.js:29:5)
+    at Promise.then.completed (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:66:9)
+    at _runTestsForDescribeBlock (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:60:9)
+    at run (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\run.js:25:3)
+    at runAndTransformResultsToJestFormat (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:170:21)
+    at jestAdapter (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:82:19)
+    at runTestInternal (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\runTest.js:389:16)
+    at runTest (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\runTest.js:475:34)
+    at Object.worker (C:\Users\PR20554201\Desktop\NodeApp\frontend\node_modules\jest-runner\build\testWorker.js:133:12)</failure>
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/App.test.js">
-    <testCase name="App Component renders without crashing" duration="94">
+    <testCase name="App Component renders without crashing" duration="54">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/App.test.js">
-    <testCase name="App Component renders with correct structure" duration="13">
+    <testCase name="App Component renders with correct structure" duration="18">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
+    <testCase name="Footer Component renders without crashing" duration="73">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
+    <testCase name="Footer Component has the correct class name" duration="9">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
+    <testCase name="Footer Component displays the current year" duration="6">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
+    <testCase name="Header Component renders without crashing" duration="50">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
+    <testCase name="Header Component has the correct class name" duration="16">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
+    <testCase name="Header Component contains logo element" duration="9">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component renders without crashing" duration="38">
+    <testCase name="Main Component renders without crashing" duration="79">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component has the correct class name" duration="6">
+    <testCase name="Main Component has the correct class name" duration="10">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component contains heading element" duration="36">
+    <testCase name="Main Component contains heading element" duration="84">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
+    <testCase name="Main Component heading and paragraph have correct text content" duration="6">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
+    <testCase name="Main Component paragraph has correct styling" duration="11">
     </testCase>
   </file>
 </testExecutions>
