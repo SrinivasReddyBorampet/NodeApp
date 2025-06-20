@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
-    <testCase name="Header Component renders without crashing" duration="86">
+    <testCase name="Header Component renders without crashing" duration="48">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
-    <testCase name="Header Component has the correct class name" duration="13">
+    <testCase name="Header Component has the correct class name" duration="7">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Header.test.js">
@@ -13,35 +13,35 @@
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component renders without crashing" duration="97">
+    <testCase name="Footer Component renders without crashing" duration="59">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component has the correct class name" duration="15">
+    <testCase name="Footer Component has the correct class name" duration="11">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Footer.test.js">
-    <testCase name="Footer Component displays the current year" duration="15">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component renders without crashing" duration="101">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component has the correct class name" duration="17">
-    </testCase>
-  </file>
-  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
-    <testCase name="Main Component contains heading element" duration="185">
+    <testCase name="Footer Component displays the current year" duration="8">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/App.test.js">
-    <testCase name="App Component renders without crashing" duration="78">
+    <testCase name="App Component renders without crashing" duration="94">
     </testCase>
   </file>
   <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/App.test.js">
-    <testCase name="App Component renders with correct structure" duration="11">
+    <testCase name="App Component renders with correct structure" duration="13">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
+    <testCase name="Main Component renders without crashing" duration="38">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
+    <testCase name="Main Component has the correct class name" duration="6">
+    </testCase>
+  </file>
+  <file path="C:/Users/PR20554201/Desktop/NodeApp/frontend/src/components/Main.test.js">
+    <testCase name="Main Component contains heading element" duration="36">
     </testCase>
   </file>
 </testExecutions>

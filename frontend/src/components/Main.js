@@ -24,10 +24,10 @@ function Main() {
     console.log("test")
     eval("console.log('Executing arbitrary code')"); // Using eval is a critical security issue
   }
-
+ //test
   return (
     <main className="main">
-      <h1 id='test'>Developer Portal</h1>
+      <h1 id='test'>Developer Portal test</h1>
       <p style={{fontSize:"19px"}} id='test'>Welcome to the Developer Portal</p>
       <script dangerouslySetInnerHTML={{__html: 'alert("XSS vulnerability")'}} /> {/* XSS vulnerability */}
     </main>
