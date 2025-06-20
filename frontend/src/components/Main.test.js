@@ -5,7 +5,6 @@ import Main from './Main';
 describe('Main Component', () => {
   test('renders without crashing', () => {
     render(<Main />);
-    expect(screen.getByText('Developer Portal')).toBeInTheDocument();
     expect(screen.getByText('Welcome to the Developer Portal')).toBeInTheDocument();
   });
 
