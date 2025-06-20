@@ -18,6 +18,18 @@ describe('Main Component', () => {
     render(<Main />);
     const headingElement = screen.getByRole('heading', { level: 1 });
     expect(headingElement).toBeInTheDocument();
-    expect(headingElement.textContent).toBe('Developer Portal');
+    expect(headingElement.textContent).toBe('Developer Portal wipro');
+  });
+
+  test('heading and paragraph have correct text content', () => {
+    render(<Main />);
+    expect(screen.getByText('Developer Portal wipro')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to the Developer Portal')).toBeInTheDocument();
+  });
+
+  test('paragraph has correct styling', () => {
+    render(<Main />);
+    const paragraph = screen.getByText('Welcome to the Developer Portal');
+    expect(paragraph).toHaveStyle('font-size: 19px');
   });
 });
