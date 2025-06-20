@@ -52,7 +52,3 @@ export default Main;
 // }
 
 // export default Main;
-
-
-
-//test
