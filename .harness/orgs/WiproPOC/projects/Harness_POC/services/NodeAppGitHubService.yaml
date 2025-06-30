@@ -26,7 +26,7 @@ service:
               enableDeclarativeRollback: false
       artifacts:
         primary:
-          primaryArtifactRef: <+input>
+          primaryArtifactRef: digitalrig_gar_registry
           sources:
             - identifier: digitalrig_gar_registry
               spec:
