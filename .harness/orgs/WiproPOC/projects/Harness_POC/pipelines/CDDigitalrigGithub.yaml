@@ -1,5 +1,5 @@
 pipeline:
-  name: CD-Digitalrig-Github
+  name: CD-Digitalrig-Canary-Github
   identifier: CDDigitalrigGithub
   projectIdentifier: Harness_POC
   orgIdentifier: WiproPOC
