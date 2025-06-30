@@ -1,0 +1,70 @@
+pipeline:
+  name: CD-Digitalrig-Github
+  identifier: CDDigitalrigGithub
+  projectIdentifier: Harness_POC
+  orgIdentifier: WiproPOC
+  tags: {}
+  variables:
+    - name: TOSCA_API_URL
+      type: String
+      value: http://34.60.185.155:8080/run-tosca
+  stages:
+    - stage:
+        name: Deploy Dev
+        identifier: Deploy_Dev
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: Deploy_Using_Test_Manifest_CDDigitalRig
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  manifests:
+                    - manifest:
+                        identifier: digitalrigtest_deployment
+                        type: K8sManifest
+                        spec:
+                          store:
+                            type: HarnessCode
+                            spec:
+                              branch: <+input>
+                  artifacts:
+                    primary:
+                      sources:
+                        - identifier: digitalrig_gar_registry
+                          type: GoogleArtifactRegistry
+                          spec:
+                            version: <+input>
+          environment:
+            environmentRef: digitalrig_dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: GKEclusterstandardconnector
+          execution:
+            steps:
+              - step:
+                  name: DigitalRig-Dev-Rollout
+                  identifier: DigitalRigDevRollout
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+                    pruningEnabled: false
+            rollbackSteps:
+              - step:
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec:
+                    pruningEnabled: false
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
