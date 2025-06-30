@@ -31,9 +31,10 @@ pipeline:
                 spec:
                   artifacts:
                     primary:
-                      primaryArtifactRef: <+input>
                       sources:
-                        - spec:
+                        - identifier: digitalrig_gar_registry
+                          type: GoogleArtifactRegistry
+                          spec:
                             version: <+input>
             gitBranch: main
           execution:
