@@ -8,13 +8,6 @@ pipeline:
     - name: TOSCA_API_URL
       type: String
       value: http://34.60.185.155:8080/run-tosca
-  properties:
-    ci:
-      codebase:
-        connectorRef: srinivas_github_account
-        repoName: SrinivasReddyBorampet/NodeApp
-        build: <+input>
-        sparseCheckout: []
   stages:
     - stage:
         name: Deploy Dev
@@ -267,18 +260,27 @@ pipeline:
                     approverInputs: []
         tags: {}
     - stage:
-        name: Deploy Prod
-        identifier: BGDeployment
-        description: ""
+        name: Deploy to Prod
+        identifier: Deploy_App1
+        description: Canary Deployment to Production
         type: Deployment
         spec:
           deploymentType: Kubernetes
           service:
-            serviceRef: NodeAppGitHubService
+            serviceRef: Deploy_Using_Test_Manifest_Clone
             serviceInputs:
               serviceDefinition:
                 type: Kubernetes
                 spec:
+                  manifests:
+                    - manifest:
+                        identifier: digitalrigtest_deployment
+                        type: K8sManifest
+                        spec:
+                          store:
+                            type: HarnessCode
+                            spec:
+                              branch: <+input>
                   artifacts:
                     primary:
                       sources:
@@ -286,127 +288,114 @@ pipeline:
                           type: GoogleArtifactRegistry
                           spec:
                             version: <+input>
-          environment:
-            environmentRef: digitalrigprod
-            deployToAll: false
-            infrastructureDefinitions:
-              - identifier: GKE_cluster_standard_conenctor
           execution:
             steps:
-              - step:
-                  type: K8sDelete
-                  name: Refresh Existing Service
-                  identifier: K8sDelete_1
-                  spec:
-                    deleteResources:
-                      type: ManifestPath
-                      spec:
-                        manifestPaths:
-                          - frontend/Service.yaml
-                    delegateSelectors:
-                      - migrator-delegate
-                  timeout: 10m
-                contextType: Pipeline
-              - step:
-                  name: Green Deployment
-                  identifier: stageDeployment
-                  type: K8sBlueGreenDeploy
-                  timeout: 10m
-                  spec:
-                    skipDryRun: true
-                    pruningEnabled: false
-                    skipUnchangedManifest: false
-              - step:
-                  name: Switch traffic to Green
-                  identifier: bgSwapServices
-                  type: K8sBGSwapServices
-                  timeout: 10m
-                  spec:
-                    skipDryRun: false
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: Canary_Deployment
+                  steps:
+                    - step:
+                        type: K8sCanaryDeploy
+                        name: Canary 33
+                        identifier: Canary_20
+                        spec:
+                          skipDryRun: false
+                          instanceSelection:
+                            spec:
+                              count: 1
+                            type: Count
+                        timeout: 10m
+                    - step:
+                        type: HarnessApproval
+                        name: Approval-1
+                        identifier: HarnessApproval
+                        spec:
+                          approvalMessage: Please review the following information and approve the pipeline progression
+                          includePipelineExecutionHistory: true
+                          isAutoRejectEnabled: false
+                          approvers:
+                            userGroups:
+                              - _project_all_users
+                            minimumCount: 1
+                            disallowPipelineExecutor: false
+                          approverInputs: []
+                        timeout: 1d
+                    - step:
+                        type: K8sCanaryDeploy
+                        name: Canary 66
+                        identifier: Canary_66
+                        spec:
+                          skipDryRun: false
+                          instanceSelection:
+                            spec:
+                              count: 2
+                            type: Count
+                        timeout: 10m
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: Primary_Deployment
+                  steps:
+                    - step:
+                        type: HarnessApproval
+                        name: Approval-2
+                        identifier: Approval2
+                        spec:
+                          approvalMessage: Please review the following information and approve the pipeline progression
+                          includePipelineExecutionHistory: true
+                          isAutoRejectEnabled: false
+                          approvers:
+                            userGroups:
+                              - _project_all_users
+                            minimumCount: 1
+                            disallowPipelineExecutor: false
+                          approverInputs: []
+                        timeout: 1d
+                    - step:
+                        type: K8sRollingDeploy
+                        name: Full Deployment
+                        identifier: Full_Deployment
+                        spec:
+                          skipDryRun: false
+                          pruningEnabled: true
+                        timeout: 10m
+              - stepGroup:
+                  name: Canary Wrap Up
+                  identifier: Canary_Wrap_Up
+                  steps:
+                    - step:
+                        type: HarnessApproval
+                        name: Approval-3
+                        identifier: Approval3
+                        spec:
+                          approvalMessage: Please review the following information and approve the pipeline progression
+                          includePipelineExecutionHistory: true
+                          isAutoRejectEnabled: false
+                          approvers:
+                            userGroups:
+                              - _project_all_users
+                            minimumCount: 1
+                            disallowPipelineExecutor: false
+                          approverInputs: []
+                        timeout: 1d
+                    - step:
+                        type: K8sCanaryDelete
+                        name: CanaryDelete
+                        identifier: CanaryDelete
+                        spec: {}
+                        timeout: 10m
             rollbackSteps:
               - step:
-                  name: Swap primary with stage service
-                  identifier: rollbackBgSwapServices
-                  type: K8sBGSwapServices
+                  name: Rollback Deployment
+                  identifier: rollbackDeployment
+                  type: K8sRollingRollback
                   timeout: 10m
                   spec:
-                    skipDryRun: false
-        tags: {}
-        failureStrategies:
-          - onFailure:
-              errors:
-                - AllErrors
-              action:
-                type: StageRollback
-    - stage:
-        name: BA_Approval
-        identifier: BA_Approval
-        description: ""
-        type: Approval
-        spec:
-          execution:
-            steps:
-              - step:
-                  name: BA_Approval
-                  identifier: BA_Approval
-                  type: HarnessApproval
-                  timeout: 1h
-                  spec:
-                    approvalMessage: |-
-                      Please review the following information
-                      and approve the pipeline progression
-                    includePipelineExecutionHistory: true
-                    approvers:
-                      minimumCount: 1
-                      disallowPipelineExecutor: false
-                      userGroups:
-                        - BA_approval_Group
-                        - QA_Approval_Group
-                      serviceAccounts:
-                        - poc
-                    isAutoRejectEnabled: false
-                    approverInputs: []
-        tags: {}
-    - stage:
-        name: Scaledown
-        identifier: Scaledown
-        description: ""
-        type: Deployment
-        spec:
-          deploymentType: Kubernetes
-          service:
-            serviceRef: Deploy_Using_Manifest
-            serviceInputs:
-              serviceDefinition:
-                type: Kubernetes
-                spec:
-                  artifacts:
-                    primary:
-                      sources:
-                        - identifier: digitalrig_gar_registry
-                          type: GoogleArtifactRegistry
-                          spec:
-                            version: <+input>
+                    pruningEnabled: true
           environment:
-            environmentRef: digitalrigprod
+            environmentRef: digitalrig_prod
             deployToAll: false
             infrastructureDefinitions:
-              - identifier: GKE_cluster_standard_conenctor
-          execution:
-            steps:
-              - step:
-                  type: K8sBlueGreenStageScaleDown
-                  name: K8sBlueGreenStageScaleDown_1
-                  identifier: K8sBlueGreenStageScaleDown_1
-                  spec: {}
-            rollbackSteps:
-              - step:
-                  name: Swap primary with stage service
-                  identifier: rollbackBgSwapServices
-                  type: K8sBGSwapServices
-                  timeout: 10m
-                  spec:
-                    skipDryRun: false
+              - identifier: GKEclusterstandardconnector
         tags: {}
         failureStrategies:
           - onFailure:
