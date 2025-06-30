@@ -71,6 +71,37 @@ pipeline:
           pipelineStatus: Success
           condition: <+input>
     - stage:
+        name: Dev_Approval
+        identifier: Dev_Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Dev Deployment Approval
+                  identifier: Dev_Deployment_Approval
+                  type: HarnessApproval
+                  timeout: 1h
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - Dev_Approval_Group
+                        - BA_approval_Group
+                        - _project_all_users
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+        when:
+          pipelineStatus: Success
+          condition: <+input>
+    - stage:
         name: Deploy QA
         identifier: Deploy_QA
         description: ""
@@ -123,6 +154,118 @@ pipeline:
         when:
           pipelineStatus: Success
           condition: <+input>
+    - stage:
+        name: Execute QA Test
+        identifier: Test_and_Validate
+        description: ""
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: Http
+                  name: Run Tosca Tests
+                  identifier: Run_Tosca_Tests
+                  spec:
+                    url: <+pipeline.variables.TOSCA_API_URL>
+                    method: POST
+                    headers:
+                      - key: Content-Type
+                        value: application/json
+                    inputVariables: []
+                    outputVariables: []
+                    requestBody: |-
+                      {
+                        "eventId": "<+secrets.getValue('tosca_event_id')>"
+                      }
+                  timeout: 3m
+        tags: {}
+    - stage:
+        name: QA_Approval
+        identifier: QA_Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: QA Deployment Approval
+                  identifier: QA_Deployment_Approval
+                  type: HarnessApproval
+                  timeout: 1h
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - QA_Approval_Group
+                        - BA_approval_Group
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+    - stage:
+        name: PR Approval
+        identifier: PR_Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: QA Approval stage
+                  identifier: QA_Approval_stage
+                  type: HarnessApproval
+                  timeout: 1d
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - QA_Group
+                        - BA_approval_Group
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+        when:
+          pipelineStatus: Success
+          condition: <+input>
+    - stage:
+        name: BA-QA_Approval
+        identifier: BAQA_Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: BA-QA_approval
+                  identifier: BAQA_approval
+                  type: HarnessApproval
+                  timeout: 1h
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - BA_approval_Group
+                        - QA_Approval_Group
+                      serviceAccounts:
+                        - poc
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
     - stage:
         name: Deploy Prod
         identifier: BGDeployment
@@ -180,6 +323,81 @@ pipeline:
                   timeout: 10m
                   spec:
                     skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Swap primary with stage service
+                  identifier: rollbackBgSwapServices
+                  type: K8sBGSwapServices
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+    - stage:
+        name: BA_Approval
+        identifier: BA_Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: BA_Approval
+                  identifier: BA_Approval
+                  type: HarnessApproval
+                  timeout: 1h
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - BA_approval_Group
+                      serviceAccounts:
+                        - poc
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+    - stage:
+        name: Scaledown
+        identifier: Scaledown
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: Deploy_Using_Manifest
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      sources:
+                        - identifier: digitalrig_gar_registry
+                          type: GoogleArtifactRegistry
+                          spec:
+                            version: <+input>
+          environment:
+            environmentRef: digitalrigprod
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: GKE_cluster_standard_conenctor
+          execution:
+            steps:
+              - step:
+                  type: K8sBlueGreenStageScaleDown
+                  name: K8sBlueGreenStageScaleDown_1
+                  identifier: K8sBlueGreenStageScaleDown_1
+                  spec: {}
             rollbackSteps:
               - step:
                   name: Swap primary with stage service
