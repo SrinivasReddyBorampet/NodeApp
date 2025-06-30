@@ -16,12 +16,12 @@ service:
                   connectorRef: srinivas_github_account
                   gitFetchType: Branch
                   paths:
-                    - frontend/digitalrig-deployment.yaml
-                    - frontend/Service.yaml
+                    - frontend/digitalrig-deployment-canary.yaml
+                    - frontend/canary-service.yaml
                   repoName: NodeApp
                   branch: main
               valuesPaths:
-                - frontend/values.yaml
+                - frontend/canary-values.yaml
               skipResourceVersioning: false
               enableDeclarativeRollback: false
       artifacts:
