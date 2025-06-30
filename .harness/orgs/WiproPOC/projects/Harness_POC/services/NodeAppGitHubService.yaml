@@ -1,0 +1,5 @@
+service:
+  name: NodeApp-GitHub-Service
+  identifier: NodeAppGitHubService
+  orgIdentifier: WiproPOC
+  projectIdentifier: Harness_POC
