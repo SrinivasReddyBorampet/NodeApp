@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: digitalrig-deployment
+  labels:
+    app: digitalrig
+  annotations:
+    harness.io/primary-service: "true"
+    harness.io/stage-service: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: digitalrig
+  template:
+    metadata:
+      labels:
+        app: digitalrig
+    spec:
+      containers:
+        - name: digitalrig-container
+          image: {{ .Values.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

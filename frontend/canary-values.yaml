@@ -1,0 +1,25 @@
+name: digitalrig-deployment
+replicas: 3
+version: stable 
+track: stable 
+
+canary:
+  enabled: false  
+  trafficPercentage: 20  
+
+image: <+artifacts.primary.image>
+createNamespace: true
+namespace: <+infra.namespace>
+
+serviceType: LoadBalancer
+
+servicePort: 80
+serviceTargetPort: 80
+
+env:
+  config:
+    key1: value10
+    APP_VERSION: "{{ .Values.version }}" 
+    APP_TRACK: "{{ .Values.track }}" 
+  secrets:
+    key2: value2

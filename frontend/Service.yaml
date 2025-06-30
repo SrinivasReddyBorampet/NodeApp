@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:  digitalrig-service-1
+  annotations:
+    harness.io/primary-service: "true"
+spec:
+    selector:
+      app: digitalrig
+    ports:
+      - port: 80
+        targetPort: 80
+        protocol: TCP
+    type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: digitalrig-service-2
+  annotations:
+    harness.io/stage-service: "true"
+spec:
+  selector:
+    app: digitalrig
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: LoadBalancer 

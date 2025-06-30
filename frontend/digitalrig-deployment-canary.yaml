@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: digitalrig-deployment
+  labels:
+    app: digitalrig
+    version: {{ .Values.version | default "stable" }}
+  annotations:
+    harness.io/primary-service: "true"
+    harness.io/stage-service: "true"
+spec:
+  replicas: {{ .Values.replicas | default 3 }}
+  selector:
+    matchLabels:
+      app: digitalrig
+  template:
+    metadata:
+      labels:
+        app: digitalrig
+        version: {{ .Values.version | default "stable" }}
+        track: {{ .Values.track | default "stable" }}
+    spec:
+      containers:
+        - name: digitalrig-container
+          image: {{ .Values.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          # Health checks for better canary monitoring
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
