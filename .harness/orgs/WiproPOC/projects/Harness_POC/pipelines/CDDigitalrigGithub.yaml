@@ -361,6 +361,7 @@ pipeline:
                       disallowPipelineExecutor: false
                       userGroups:
                         - BA_approval_Group
+                        - QA_Approval_Group
                       serviceAccounts:
                         - poc
                     isAutoRejectEnabled: false
