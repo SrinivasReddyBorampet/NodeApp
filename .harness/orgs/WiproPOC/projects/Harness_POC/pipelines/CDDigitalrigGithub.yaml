@@ -267,20 +267,11 @@ pipeline:
         spec:
           deploymentType: Kubernetes
           service:
-            serviceRef: Deploy_Using_Test_Manifest_Clone
+            serviceRef: NodeAppGitHubService
             serviceInputs:
               serviceDefinition:
                 type: Kubernetes
                 spec:
-                  manifests:
-                    - manifest:
-                        identifier: digitalrigtest_deployment
-                        type: K8sManifest
-                        spec:
-                          store:
-                            type: HarnessCode
-                            spec:
-                              branch: <+input>
                   artifacts:
                     primary:
                       sources:
