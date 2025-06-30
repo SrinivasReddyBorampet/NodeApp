@@ -7,7 +7,7 @@ service:
     spec:
       manifests:
         - manifest:
-            identifier: digitalrigtest_deployment
+            identifier: digitalrig_deployment
             type: K8sManifest
             spec:
               store:
