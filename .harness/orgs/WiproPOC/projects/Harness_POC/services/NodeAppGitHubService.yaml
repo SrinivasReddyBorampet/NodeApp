@@ -3,3 +3,40 @@ service:
   identifier: NodeAppGitHubService
   orgIdentifier: WiproPOC
   projectIdentifier: Harness_POC
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: digitalrigtest_deployment
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: srinivas_github_account
+                  gitFetchType: Branch
+                  paths:
+                    - frontend/digitalrig-deployment.yaml
+                    - frontend/Service.yaml
+                  repoName: NodeApp
+                  branch: main
+              valuesPaths:
+                - frontend/values.yaml
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+      artifacts:
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - identifier: digitalrig_gar_registry
+              spec:
+                connectorRef: account.DigitalRigGCPConnector
+                repositoryType: docker
+                project: digital-rig-poc
+                region: us-east1
+                repositoryName: test-repo
+                package: digitalrigpoc
+                version: <+input>
+                digest: ""
+              type: GoogleArtifactRegistry
+    type: Kubernetes
