@@ -8,10 +8,16 @@ pipeline:
     - name: TOSCA_API_URL
       type: String
       value: http://34.60.185.155:8080/run-tosca
+  properties:
+    ci:
+      codebase:
+        connectorRef: srinivas_github_account
+        repoName: SrinivasReddyBorampet/NodeApp
+        build: <+input>
   stages:
     - stage:
         name: Deploy Dev
-        identifier: Deploy_Dev
+        identifier: Deploy_App
         description: ""
         type: Deployment
         spec:
@@ -28,8 +34,80 @@ pipeline:
                         type: K8sManifest
                         spec:
                           store:
-                            type: HarnessCode
+                            type: Github
                             spec:
+                              connectorRef: srinivas_github_account
+                              gitFetchType: Branch
+                              paths:
+                                - frontend/digitalrig-deployment.yaml
+                              repoName: SrinivasReddyBorampet/NodeApp
+                              branch: <+input>
+                  artifacts:
+                    primary:
+                      sources:
+                        - identifier: digitalrig_gar_registry
+                          type: GoogleArtifactRegistry
+                          spec:
+                            version: <+input>
+          execution:
+            steps:
+              - step:
+                  type: K8sRollingDeploy
+                  name: DigitalRig-Dev-Rollout
+                  identifier: DigitalRigDevRollout
+                  spec:
+                    skipDryRun: false
+                    pruningEnabled: false
+                  timeout: 10m
+            rollbackSteps:
+              - step:
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec:
+                    pruningEnabled: false
+          environment:
+            environmentRef: digitalrig_dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: GKEclusterstandardconnector
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+        when:
+          pipelineStatus: Success
+          condition: <+input>
+    - stage:
+        name: Deploy QA
+        identifier: Deploy_QA
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: Deploy_Using_Test_Manifest_CDDigitalRig
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  manifests:
+                    - manifest:
+                        identifier: digitalrigtest_deployment
+                        type: K8sManifest
+                        spec:
+                          store:
+                            type: Github
+                            spec:
+                              connectorRef: srinivas_github_account
+                              gitFetchType: Branch
+                              paths:
+                                - frontend/digitalrig-deployment.yaml
+                              repoName: SrinivasReddyBorampet/NodeApp
                               branch: <+input>
                   artifacts:
                     primary:
@@ -39,15 +117,15 @@ pipeline:
                           spec:
                             version: <+input>
           environment:
-            environmentRef: digitalrig_dev
+            environmentRef: digitalrigqa
             deployToAll: false
             infrastructureDefinitions:
               - identifier: GKEclusterstandardconnector
           execution:
             steps:
               - step:
-                  name: DigitalRig-Dev-Rollout
-                  identifier: DigitalRigDevRollout
+                  name: Rollout Deployment QA
+                  identifier: Rollout_Deployment_QA
                   type: K8sRollingDeploy
                   timeout: 10m
                   spec:
@@ -68,10 +146,92 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
-  properties:
-    ci:
-      codebase:
-        connectorRef: srinivas_github_account
-        repoName: NodeApp
-        build: <+input>
-        sparseCheckout: []
+        when:
+          pipelineStatus: Success
+          condition: <+input>
+    - stage:
+        name: Deploy Prod
+        identifier: BGDeployment
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: Deploy_Using_Test_Manifest_CDDigitalRig
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  manifests:
+                    - manifest:
+                        identifier: digitalrigtest_deployment
+                        type: K8sManifest
+                        spec:
+                          store:
+                            type: Github
+                            spec:
+                              connectorRef: srinivas_github_account
+                              gitFetchType: Branch
+                              paths:
+                                - frontend/digitalrig-deployment.yaml
+                              repoName: SrinivasReddyBorampet/NodeApp
+                              branch: <+input>
+                  artifacts:
+                    primary:
+                      sources:
+                        - identifier: digitalrig_gar_registry
+                          type: GoogleArtifactRegistry
+                          spec:
+                            version: <+input>
+          environment:
+            environmentRef: digitalrigprod
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: GKE_cluster_standard_conenctor
+          execution:
+            steps:
+              - step:
+                  type: K8sDelete
+                  name: Refresh Existing Service
+                  identifier: K8sDelete_1
+                  spec:
+                    deleteResources:
+                      type: ManifestPath
+                      spec:
+                        manifestPaths:
+                          - frontend/Service.yaml
+                    delegateSelectors:
+                      - migrator-delegate
+                  timeout: 10m
+                contextType: Pipeline
+              - step:
+                  name: Green Deployment
+                  identifier: stageDeployment
+                  type: K8sBlueGreenDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: true
+                    pruningEnabled: false
+                    skipUnchangedManifest: false
+              - step:
+                  name: Switch traffic to Green
+                  identifier: bgSwapServices
+                  type: K8sBGSwapServices
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Swap primary with stage service
+                  identifier: rollbackBgSwapServices
+                  type: K8sBGSwapServices
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
