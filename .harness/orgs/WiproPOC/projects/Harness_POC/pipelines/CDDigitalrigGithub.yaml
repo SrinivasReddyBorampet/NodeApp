@@ -28,7 +28,7 @@ pipeline:
                     jobParameter: []
                     unstableStatusAsSuccess: false
                     useConnectorUrlForJobExecution: false
-                  timeout: 3m
+                  timeout: 10m
           environment:
             environmentRef: default
             deployToAll: false
