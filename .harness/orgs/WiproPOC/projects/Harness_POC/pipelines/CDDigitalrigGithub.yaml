@@ -10,34 +10,6 @@ pipeline:
       value: http://34.60.185.155:8080/run-tosca
   stages:
     - stage:
-        name: Jenkins CI Build
-        identifier: test
-        description: ""
-        type: Custom
-        spec:
-          execution:
-            steps:
-              - step:
-                  type: JenkinsBuild
-                  name: Jenkins_CI_Build
-                  identifier: Jenkins_CI_Build
-                  spec:
-                    connectorRef: jenkins
-                    consoleLogPollFrequency: 5m
-                    jobName: CI-TEST
-                    jobParameter: []
-                    delegateSelectors:
-                      - docker-delegate
-                    unstableStatusAsSuccess: false
-                    useConnectorUrlForJobExecution: true
-                  timeout: 10m
-          environment:
-            environmentRef: default
-            deployToAll: false
-            infrastructureDefinitions:
-              - identifier: GKEclusterstandardconnector
-        tags: {}
-    - stage:
         name: Deploy Dev
         identifier: Deploy_App
         description: ""
