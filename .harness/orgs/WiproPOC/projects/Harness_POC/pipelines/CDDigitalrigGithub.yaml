@@ -27,7 +27,7 @@ pipeline:
                     jobName: CI-TEST
                     jobParameter: []
                     delegateSelectors:
-                      - migrator-delegate
+                      - docker-delegate
                     unstableStatusAsSuccess: false
                     useConnectorUrlForJobExecution: false
                   timeout: 10m
