@@ -23,7 +23,7 @@ pipeline:
                   identifier: Jenkins_CI_Build
                   spec:
                     connectorRef: jenkins
-                    consoleLogPollFrequency: 5s
+                    consoleLogPollFrequency: 1m
                     jobName: CI-TEST
                     jobParameter: []
                     unstableStatusAsSuccess: false
