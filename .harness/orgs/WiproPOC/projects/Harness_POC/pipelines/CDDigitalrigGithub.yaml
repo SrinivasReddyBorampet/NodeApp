@@ -29,7 +29,7 @@ pipeline:
                     delegateSelectors:
                       - docker-delegate
                     unstableStatusAsSuccess: false
-                    useConnectorUrlForJobExecution: false
+                    useConnectorUrlForJobExecution: true
                   timeout: 10m
           environment:
             environmentRef: default
