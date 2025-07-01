@@ -26,6 +26,8 @@ pipeline:
                     consoleLogPollFrequency: 5m
                     jobName: CI-TEST
                     jobParameter: []
+                    delegateSelectors:
+                      - migrator-delegate
                     unstableStatusAsSuccess: false
                     useConnectorUrlForJobExecution: false
                   timeout: 10m
