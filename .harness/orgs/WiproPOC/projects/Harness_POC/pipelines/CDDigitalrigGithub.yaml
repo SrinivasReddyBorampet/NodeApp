@@ -10,7 +10,7 @@ pipeline:
       value: http://34.60.185.155:8080/run-tosca
   stages:
     - stage:
-        name: test
+        name: Jenkins CI Build
         identifier: test
         description: ""
         type: Custom
@@ -29,6 +29,11 @@ pipeline:
                     unstableStatusAsSuccess: false
                     useConnectorUrlForJobExecution: false
                   timeout: 3m
+          environment:
+            environmentRef: default
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: GKEclusterstandardconnector
         tags: {}
     - stage:
         name: Deploy Dev
@@ -415,3 +420,9 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+  properties:
+    ci:
+      codebase:
+        connectorRef: srinivas_github_account
+        repoName: NodeApp
+        build: <+input>
