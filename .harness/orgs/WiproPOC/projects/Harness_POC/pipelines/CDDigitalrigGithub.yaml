@@ -394,3 +394,9 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+  properties:
+    ci:
+      codebase:
+        connectorRef: srinivas_github_account
+        repoName: NodeApp
+        build: <+input>
